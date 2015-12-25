@@ -8,14 +8,9 @@ import (
 	"github.com/espebra/libfileinfo"
 )
 
-var (
-	fpath	= flag.String("file", "", "")
-)
-
-var usage = `Usage: fileinfo [options...] --file FILE
+var usage = `Usage: fileinfo [options...] FILE
 
 Options:
-  --file  File to process.
   --help  This help text.
 
 `
@@ -26,7 +21,12 @@ func main() {
 	}
 	flag.Parse()
 
-	f, err := libfileinfo.Open(*fpath)
+	if len(flag.Args()) == 0 {
+		fmt.Fprint(os.Stderr, usage)
+	}
+	fpath := flag.Arg(0)
+
+	f, err := libfileinfo.Open(fpath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)
